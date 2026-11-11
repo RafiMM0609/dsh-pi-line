@@ -1,0 +1,51 @@
+{
+  "name": "dsh-pi-line",
+  "version": "1.0.0",
+  "description": "DeepSeek Harness bundle: the \"software-build\" agent preset (lean pi-style coding loadout) plus its batched edit tool, shipped as one package.",
+  "type": "module",
+  "main": "lib/tool-edit-batch.js",
+  "exports": {
+    ".": "./lib/tool-edit-batch.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RafiMM0609/dsh-pi-line.git"
+  },
+  "homepage": "https://github.com/RafiMM0609/dsh-pi-line#readme",
+  "bugs": {
+    "url": "https://github.com/RafiMM0609/dsh-pi-line/issues"
+  },
+  "files": [
+    "cordis.patch.yml",
+    "lib/tool-edit-batch.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-bundle",
+    "agent-preset",
+    "pi"
+  ],
+  "dependencies": {
+    "@deepseek-ai/dsh-fs": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-tools": "0.2.1-rc.5",
+    "@deepseek-ai/schemastery": "~3.18.5"
+  },
+  "engines": {
+    "node": ">=22",
+    "dsh": "0.2.1-rc.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT"
+}

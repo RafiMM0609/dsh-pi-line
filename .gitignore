@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# logs & artefak lokal
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*
+*.tgz
+*.tar.gz
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# env & rahasia
+.env
+.env.*
+!.env.example

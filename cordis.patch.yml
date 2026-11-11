@@ -1,0 +1,66 @@
+# Bundle: agent preset "software-build" (gaya pi) + tool edit batch.
+#
+# Satu paket berisi dua artefak:
+#   1. row preset `software-build` (@deepseek-ai/dsh-agent-preset)
+#   2. tool `edit` batch (dsh-tool-edit-batch) di ./lib/tool-edit-batch.js
+#
+# Row tool memakai NAMA PAKET (`dsh-pi-line`) karena package.json menetapkan
+# `main`/`exports["."]` ke ./lib/tool-edit-batch.js. Loader me-resolve nama paket
+# dari node_modules profile (pola yang sama dengan plugin lain di profile ini),
+# jadi tidak ada dependency silang dan tidak ada path relatif.
+#
+# Catatan: nama relatif (mis. './lib/tool-edit-batch.js') TIDAK dipakai karena
+# anchorInsertedPluginNames() di dsh-app-boot hanya me-rekursi ke row
+# `cordis:group`, bukan ke `config.plugins` milik row agent-preset.
+#
+# Kenapa ramping:
+#   - persona `complete: true` -> MENGGANTI SELURUH system prompt dengan satu
+#     paragraf pendek; section plan/goal/schedule/jobs/workflow/team/subagent/
+#     deliverables/skills + injeksi AGENTS.md tidak ikut.
+#   - tool loadout ala pi default: read, edit (batch), write, bash + compaction.
+#     Glob/grep tidak di-mount; aturan "pakai bash untuk ls/rg/find" ada di persona.
+#   - includeRuntimeContext: true -> snapshot kecil (cwd, policy, waktu) tetap diinject.
+#
+# Cara pakai: pasang bundle ini ke profile `web`, lalu pilih preset
+# "software-build" untuk sesi baru (Web UI / mobile app).
+
+- insert:
+    - id: preset-software-build
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: software-build
+        name: Software build
+        description: Lean pi-style coding loadout - short persona, read/edit/write/bash,
+          compaction
+        order: 2
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: >-
+                You are a coding assistant. Help the user inspect files, run
+                commands, and modify code. Use bash for file operations like
+                listing and searching files (ls, rg, find). Be concise in your
+                responses. Show file paths clearly when working with files.
+              complete: true
+              includeRuntimeContext: true
+          - id: tool-bash
+            name: '@deepseek-ai/dsh-tool-bash'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+            config:
+              edit: false
+          - id: tool-edit-batch
+            name: 'dsh-pi-line'
+            config:
+              maxEdits: 100
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
